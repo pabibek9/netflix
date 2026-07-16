@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!user && !isPublicRoute) {
         router.push("/");
       } else if (user && isPublicRoute) {
-        router.push("/dashboard");
+        router.push("/apps");
       }
     }
   }, [user, pathname, isLoading, router]);
