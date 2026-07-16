@@ -5,8 +5,23 @@ import path from "path";
 export async function GET() {
   try {
     const keys: Record<string, string> = {};
-    const rootDir = process.cwd(); // Matches workspace path: D:\goofy-curie
 
+    // 1. Try loading from Cloudflare / Production Environment Variables first
+    if (process.env.LINKEDIN_ANALYZER_KEY) {
+      keys["auditbusiness-6ac2e"] = process.env.LINKEDIN_ANALYZER_KEY.trim();
+    }
+    if (process.env.BUSINESS_ANALYZER_KEY) {
+      keys["analyzer-a7b76"] = process.env.BUSINESS_ANALYZER_KEY.trim();
+    }
+    if (process.env.ASTRA_KEY) {
+      keys["astra-e1afa"] = process.env.ASTRA_KEY.trim();
+    }
+    if (process.env.BLUE_DICE_KEY) {
+      keys["diceblue-20f13"] = process.env.BLUE_DICE_KEY.trim();
+    }
+
+    // 2. Local Fallback: Load from local files
+    const rootDir = process.cwd(); // Matches workspace path: D:\goofy-curie
     const targets = [
       { id: "auditbusiness-6ac2e", dirName: "linkedin analizer" },
       { id: "analyzer-a7b76", dirName: "business anilizer" },
@@ -15,6 +30,7 @@ export async function GET() {
     ];
 
     for (const target of targets) {
+      if (keys[target.id]) continue;
       let foundKey = false;
       
       // 1. Try checking the root folder first (highly recommended for new key updates!)
